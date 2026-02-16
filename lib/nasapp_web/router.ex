@@ -17,7 +17,8 @@ defmodule NasappWeb.Router do
   scope "/", NasappWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive
+    live "/mission", MissionLive
   end
 
   # Other scopes may use custom stacks.

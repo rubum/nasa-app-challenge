@@ -1,0 +1,42 @@
+<div class="max-w-6xl mx-auto py-12 px-6 relative z-10">
+  <div class="mb-12">
+    <.mission_header />
+  </div>
+
+  <.form for={@form} phx-change="validate" class="space-y-16" id="mission-form">
+    <.mission_console form={@form} total_fuel={@total_fuel} />
+
+    <.trajectory_card on_add="add-step">
+      <div class="space-y-6">
+        <%= if Enum.empty?(get_steps(@form.source)) do %>
+          <div class="px-8 py-10 rounded-2xl bg-white/[0.02] border border-dashed border-white/5 text-center animate-in fade-in zoom-in duration-500">
+            <div class="w-12 h-12 rounded-full bg-white/[0.03] flex items-center justify-center mx-auto mb-5 ring-1 ring-white/5">
+              <.icon name="hero-inbox-solid" class="w-6 h-6 text-white/10" />
+            </div>
+            <p class="text-white/40 font-bold text-xs tracking-tight">
+              Trajectory Buffer Empty
+            </p>
+            <p class="text-[11px] text-white/20 mt-1.5 font-medium">
+              Start by appending mission stages to compute requirements.
+            </p>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 gap-4 relative">
+          <.inputs_for :let={step_f} field={@form[:steps]}>
+            <.trajectory_stage_row
+              index={step_f.index}
+              field={step_f}
+              actions={@actions}
+              planets={@planets}
+            />
+          </.inputs_for>
+        </div>
+
+        <.trajectory_error_panel error={@form[:steps].errors} />
+      </div>
+    </.trajectory_card>
+  </.form>
+
+  <.mission_footer />
+</div>

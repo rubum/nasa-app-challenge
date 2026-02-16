@@ -44,17 +44,26 @@ defmodule Nasapp.MissionPlanning.Mission do
     steps
     |> Enum.reduce_while({nil, nil}, fn step, {prev_action, prev_planet} ->
       case {prev_action, step.action} do
+        {nil, :launch} ->
+          {:cont, {:launch, step.planet}}
+
         {nil, :land} ->
           {:halt, {:error, "first step must be a launch"}}
 
+        {:launch, :land} ->
+          {:cont, {:land, step.planet}}
+
+        {:land, :launch} when step.planet != prev_planet ->
+          {:halt, {:error, "must launch from the planet where you last landed"}}
+
+        {:land, :launch} ->
+          {:cont, {:launch, step.planet}}
+
         {:launch, :launch} ->
-          {:halt, {:error, "must follow a landing"}}
+          {:halt, {:error, "must follow a landing step"}}
 
         {:land, :land} ->
-          {:halt, {:error, "must follow a launch"}}
-
-        {:launch, :land} when step.planet != prev_planet ->
-          {:halt, {:error, "landing planet must match previous launch"}}
+          {:halt, {:error, "must follow a launch step"}}
 
         _ ->
           {:cont, {step.action, step.planet}}

@@ -47,7 +47,7 @@ defmodule Nasapp.MissionPlanningTest do
         })
 
       refute changeset.valid?
-      assert "must follow a landing" in errors_on(changeset).steps
+      assert "must follow a landing step" in errors_on(changeset).steps
 
       # Example: Launch Earth -> Land Moon -> Land Mars (mismatch planet)
       changeset =
@@ -61,7 +61,7 @@ defmodule Nasapp.MissionPlanningTest do
         })
 
       refute changeset.valid?
-      assert "landing planet must match previous launch" in errors_on(changeset).steps
+      assert "must follow a launch step" in errors_on(changeset).steps
     end
   end
 
