@@ -47,7 +47,7 @@ Visit [`localhost:4000`](http://localhost:4000) to access the Mission Registry.
 ## Project Structure
 
 - `lib/nasapp/fuel_calculator.ex`: The recursive propulsion math engine.
-- `lib/nasapp/mission_planning/`: Domain schemas (`Mission`, `FlightStep`).
+- `lib/nasapp/mission/`: Domain schemas (`Plan`, `Step`).
 - `lib/nasapp_web/live/mission_live.ex`: The interactive mission control dashboard.
 - `lib/nasapp_web/components/mission_components.ex`: Reusable UI components (Headers, Consoles, Alerts).
 - `test/nasapp_web/components/`: Comprehensive functional component tests.

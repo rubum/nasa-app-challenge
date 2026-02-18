@@ -5,7 +5,7 @@ defmodule NasappWeb.MissionComponentsTest do
   import Phoenix.LiveViewTest
   import NasappWeb.MissionComponents
 
-  alias Nasapp.MissionPlanning.{Mission, FlightStep}
+  alias Nasapp.Mission.{Plan, Step}
 
   describe "mission_header/1" do
     test "renders default header" do
@@ -24,8 +24,8 @@ defmodule NasappWeb.MissionComponentsTest do
 
   describe "mission_console/1" do
     test "renders mass input and fuel output" do
-      mission = %Mission{mass: 1000}
-      changeset = Mission.changeset(mission, %{})
+      plan = %Plan{mass: 1000}
+      changeset = Plan.changeset(plan, %{})
       form = to_form(changeset)
 
       assigns = %{form: form, total_fuel: 500}
@@ -38,8 +38,8 @@ defmodule NasappWeb.MissionComponentsTest do
     end
 
     test "renders mass errors" do
-      mission = %Mission{}
-      changeset = Mission.changeset(mission, %{mass: -10})
+      plan = %Plan{}
+      changeset = Plan.changeset(plan, %{mass: -10})
       form = to_form(Map.put(changeset, :action, :validate))
 
       assigns = %{form: form, total_fuel: 0}
@@ -79,8 +79,8 @@ defmodule NasappWeb.MissionComponentsTest do
 
   describe "trajectory_stage_row/1" do
     test "renders select inputs for index 0" do
-      step = %FlightStep{action: :launch, planet: "earth"}
-      changeset = FlightStep.changeset(step, %{})
+      step = %Step{action: :launch, planet: "earth"}
+      changeset = Step.changeset(step, %{})
       step_field = to_form(changeset)
 
       assigns = %{
