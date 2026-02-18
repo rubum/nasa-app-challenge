@@ -1,23 +1,23 @@
-defmodule Nasapp.MissionPlanningTest do
+defmodule Nasapp.MissionTest do
   use ExUnit.Case, async: true
   import Ecto.Changeset
 
-  alias Nasapp.MissionPlanning
-  alias Nasapp.MissionPlanning.{Mission, FlightStep}
+  alias Nasapp.Mission
+  alias Nasapp.Mission.{Plan, Step}
 
   describe "validation" do
     test "validates mass is present and positive" do
-      changeset = MissionPlanning.change_mission(%Mission{}, %{mass: -100})
+      changeset = Mission.change_plan(%Plan{}, %{mass: -100})
       refute changeset.valid?
       assert "must be a positive integer" in errors_on(changeset).mass
 
-      changeset = MissionPlanning.change_mission(%Mission{}, %{mass: 100})
+      changeset = Mission.change_plan(%Plan{}, %{mass: 100})
       assert changeset.valid?
     end
 
     test "validates steps" do
       changeset =
-        MissionPlanning.change_mission(%Mission{}, %{
+        Mission.change_plan(%Plan{}, %{
           mass: 100,
           steps: [
             # Invalid action and planet
@@ -38,7 +38,7 @@ defmodule Nasapp.MissionPlanningTest do
     test "validates path continuity" do
       # Example: Launch Earth -> Launch Moon (missing landing)
       changeset =
-        MissionPlanning.change_mission(%Mission{}, %{
+        Mission.change_plan(%Plan{}, %{
           mass: 100,
           steps: [
             %{action: :launch, planet: "earth"},
@@ -51,7 +51,7 @@ defmodule Nasapp.MissionPlanningTest do
 
       # Example: Launch Earth -> Land Moon -> Land Mars (mismatch planet)
       changeset =
-        MissionPlanning.change_mission(%Mission{}, %{
+        Mission.change_plan(%Plan{}, %{
           mass: 100,
           steps: [
             %{action: :launch, planet: "earth"},
@@ -67,30 +67,30 @@ defmodule Nasapp.MissionPlanningTest do
 
   describe "mission planning" do
     test "calculates Apollo 11 Mission fuel correctly" do
-      mission = %Mission{
+      plan = %Plan{
         mass: 28801,
         steps: [
-          %FlightStep{action: :launch, planet: "earth"},
-          %FlightStep{action: :land, planet: "moon"},
-          %FlightStep{action: :launch, planet: "moon"},
-          %FlightStep{action: :land, planet: "earth"}
+          %Step{action: :launch, planet: "earth"},
+          %Step{action: :land, planet: "moon"},
+          %Step{action: :launch, planet: "moon"},
+          %Step{action: :land, planet: "earth"}
         ]
       }
 
-      assert MissionPlanning.calculate_mission_fuel(mission) == 51898
+      assert Mission.calculate_fuel(plan) == 51898
     end
 
     test "calculates fuel for mission with no steps" do
-      mission = %Mission{mass: 100, steps: []}
-      assert MissionPlanning.calculate_mission_fuel(mission) == 0
+      plan = %Plan{mass: 100, steps: []}
+      assert Mission.calculate_fuel(plan) == 0
     end
 
     test "allows removing flight path steps" do
-      mission = %Mission{
+      plan = %Plan{
         mass: 100,
         steps: [
-          %FlightStep{action: :launch, planet: "earth"},
-          %FlightStep{action: :land, planet: "moon"}
+          %Step{action: :launch, planet: "earth"},
+          %Step{action: :land, planet: "moon"}
         ]
       }
 
@@ -99,7 +99,7 @@ defmodule Nasapp.MissionPlanningTest do
         "steps" => [%{"action" => "launch", "planet" => "earth"}]
       }
 
-      changeset = MissionPlanning.change_mission(mission, params)
+      changeset = Mission.change_plan(plan, params)
       steps = get_field(changeset, :steps)
       [step] = steps
 

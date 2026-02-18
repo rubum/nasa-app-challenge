@@ -1,4 +1,4 @@
-defmodule Nasapp.MissionPlanning.FlightStep do
+defmodule Nasapp.Mission.Step do
   @moduledoc """
   Represents a single step in a flight path.
   A step consists of an action (launch/land) and a target planet.

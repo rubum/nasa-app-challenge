@@ -1,19 +1,19 @@
-defmodule Nasapp.MissionPlanning.Mission do
+defmodule Nasapp.Mission.Plan do
   @moduledoc """
   Represents a mission plan containing the spacecraft mass and the complete flight path.
   """
   use Ecto.Schema
   import Ecto.Changeset
-  alias Nasapp.MissionPlanning.FlightStep
+  alias Nasapp.Mission.Step
 
   embedded_schema do
     field(:mass, :integer)
-    embeds_many(:steps, FlightStep, on_replace: :delete)
+    embeds_many(:steps, Step, on_replace: :delete)
   end
 
   @type t :: %__MODULE__{
           mass: non_neg_integer() | nil,
-          steps: [FlightStep.t()]
+          steps: [Step.t()]
         }
 
   @doc """
